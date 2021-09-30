@@ -1,0 +1,9 @@
+{% extends "header.html" %}
+
+{% block content %}
+    <h2>
+        {% if current_user.is_authenticated %}
+            Welcome back, {{ current_user.id }}.
+        {% endif %}
+    </h2>
+{% endblock %}
