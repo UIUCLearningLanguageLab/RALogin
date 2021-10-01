@@ -32,7 +32,7 @@ def login():
             user = User(id=form.user_name.data)
             login_user(user)
             flash('login successful')
-            return redirect('menu')
+            return redirect('index')
     return render_template('login.html', form=form)
 
 
@@ -52,4 +52,4 @@ def logout():
 @login_required
 @app.route('/menu')
 def menu():
-    return render_template('index.html', content=False)
+    return render_template('index.html')
