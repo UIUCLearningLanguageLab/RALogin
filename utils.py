@@ -4,7 +4,6 @@ import json
 import objectpath
 import os
 from typing import List
-import numpy as np
 
 
 def make_image_comparison_html(target_folders: List[str],
@@ -87,7 +86,7 @@ def make_image_comparison_html(target_folders: List[str],
     # class_Name_dict = {'andrew': {'wall': 3, 'door': 1, 'furniture': 1, ...} ,
     #                   'layla': {'wall': 1, 'door': 0, 'furniture': 0, ...}}
     # make list of unique class names (to avoid duplicate rows in data table)
-    unique_classes = np.unique(classes_used)
+    unique_classes = set(classes_used)
 
     # unique_classes = ['bag', 'big appliance', 'door', ...]
     # open class colors json
