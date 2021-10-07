@@ -10,19 +10,14 @@ def make_image_comparison_html(target_folders: List[str],
                                target_image: str,
                                ) -> str:
 
-    """generate html as string"""
+    """generate html string"""
 
-    res = ''
+    res = ''  # html string
 
-    # put folder names here in quotes, separated by commas
-    # target_folders = ['andrew', 'layla']
-    # put image name here in quotes
-    # target_image = 'yg4_rr.jpg'
-    # target_image = 'yg1_rr.jpg'
     # 'vertical' or 'horizontal'
     orientation = 'horizontal'
 
-    # set working directory to open config file
+    # open config file
     cwd = Path.cwd()
     config_path = cwd / 'config.json'
     sa.init(config_path)
@@ -38,7 +33,7 @@ def make_image_comparison_html(target_folders: List[str],
         # set folder path for where image will be downloaded
         img_folder_path = cwd
 
-        # download original image, annotations json, overlayimage and fuse image
+        # download original image, annotations json, overlay image and fuse image
         sa.download_image('new_annotator_practice/' + person, target_image, img_folder_path, True, True, True)
         sa.download_annotation_classes_json('new_annotator_practice', img_folder_path)
 
@@ -167,6 +162,7 @@ def make_image_comparison_html(target_folders: List[str],
             </div>
             """
         res += html_str1
+
         # write fuse images (with proper orientation)
         for image in renamed_images:
             if orientation == 'vertical':

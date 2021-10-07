@@ -3,9 +3,10 @@ from flask import render_template, flash, redirect
 from forms import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user
 
+from superannotate.exceptions import SABaseException
+
 from config import Config
 from user import User
-
 from utils import make_image_comparison_html
 
 app = Flask(__name__)
@@ -32,7 +33,7 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.user_name.data == 'ra' and form.password.data == 'ra':  # TODO get environment variable
+        if form.user_name.data == 'ra' and form.password.data == 'ra':  # TODO get from environment variable
             user = User(id=form.user_name.data)
             login_user(user)
             flash('login successful')
@@ -63,9 +64,12 @@ def menu():
 @app.route('/image-comparison')
 def image_comparison():
 
-    return 'Not implemented yet'
-
-    user = session['user_id']
+    try:
+        user_id = session['_user_id']
+    except KeyError:
+        return 'Did not find _user_id in session'
+    else:
+        user = User.get(user_id)
 
     if user.id == 'ra':
         target_folders = ['andrew', 'layla']
@@ -73,6 +77,14 @@ def image_comparison():
         raise AttributeError('NO matching user.id')
 
     target_image = ''  # TODO dynamic
-    html = make_image_comparison_html(target_folders, target_image)  # TODO
 
-    return html
+    try:
+        html = make_image_comparison_html(target_folders, target_image)
+    except SABaseException as e:
+        msg = ''
+        msg += '<h2 style="color: red;">Failed to produce HTML due to error in superannotate:</h2>'
+        msg += '<br>'
+        msg += e.message
+        return msg
+    else:
+        return html
