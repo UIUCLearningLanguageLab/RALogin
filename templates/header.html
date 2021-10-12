@@ -8,11 +8,10 @@
 
     <h1>RA Access to UIUC Language & Learning Lab File Server</h1>
 
-    <a href="/login">Login</a>
-    <a href="/menu">Menu</a>
-
      {% if current_user.is_authenticated %}
         <a href="/logout">Logout</a>
+     {% else %}
+         <a href="/login">Login</a>
      {% endif %}
 
 

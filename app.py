@@ -1,16 +1,16 @@
-from flask import Flask, session
+from flask import Flask, session, request
 from flask import render_template, flash, redirect
 from forms import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user
 
 from superannotate.exceptions import SABaseException
 
-from config import Config
+import configs
 from user import User
 from utils import make_image_comparison_html
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(configs.FlaskApp)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -33,11 +33,21 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.user_name.data == 'ra' and form.password.data == 'ra':  # TODO get from environment variable
-            user = User(id=form.user_name.data)
-            login_user(user)
-            flash('login successful')
+
+        try:
+            correct_pw = configs.Authentication.user2pw[form.user_name.data]  # TODO get pw from environment variable
+        except KeyError:
+            flash('Did not recognize user name.')
             return redirect('index')
+        else:
+            if form.password.data == correct_pw:
+                user = User(id=form.user_name.data)
+                login_user(user)
+                flash('Login successful.')
+                return redirect('index')
+            else:
+                flash('Incorrect password.')
+                return redirect('index')
     return render_template('login.html', form=form)
 
 
@@ -55,14 +65,11 @@ def logout():
 
 
 @login_required
-@app.route('/menu')
-def menu():
-    return render_template('index.html')
-
-
-@login_required
 @app.route('/image-comparison')
 def image_comparison():
+
+    # get requested image file name
+    target_image = request.args['image_dropdown']
 
     try:
         user_id = session['_user_id']
@@ -74,9 +81,7 @@ def image_comparison():
     if user.id == 'ra':
         target_folders = ['andrew', 'layla']
     else:
-        raise AttributeError('NO matching user.id')
-
-    target_image = ''  # TODO dynamic
+        raise AttributeError('No matching user.id')
 
     try:
         html = make_image_comparison_html(target_folders, target_image)

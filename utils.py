@@ -1,9 +1,10 @@
 import superannotate as sa
-from pathlib import Path
 import json
 import objectpath
 import os
 from typing import List
+
+import configs
 
 
 def make_image_comparison_html(target_folders: List[str],
@@ -12,50 +13,39 @@ def make_image_comparison_html(target_folders: List[str],
 
     """generate html string"""
 
-    res = ''  # html string
-
-    # 'vertical' or 'horizontal'
-    orientation = 'horizontal'
-
-    # open config file
-    cwd = Path.cwd()
-    config_path = cwd / 'config.json'
-    sa.init(config_path)
+    sa.init(configs.Paths.superannotate_config_path)
 
     # create empty list of renamed images and classes_used; create empty dict of class tuples
-    renamed_images = []
+    renamed_image_file_names = []
     classes_used = []
     class_tuples = {}
 
     # loop through specified people/folders
     for person in target_folders:
 
-        # set folder path for where image will be downloaded
-        img_folder_path = cwd
-
         # download original image, annotations json, overlay image and fuse image
-        sa.download_image('new_annotator_practice/' + person, target_image, img_folder_path, True, True, True)
-        sa.download_annotation_classes_json('new_annotator_practice', img_folder_path)
+        sa.download_image('new_annotator_practice/' + person, target_image, configs.Paths.downloads, True, True, True)
+        sa.download_annotation_classes_json('new_annotator_practice', configs.Paths.downloads)
 
         # change name of fuse image to avoid overwriting image during second loop
         # (since otherwise they would have same name)
         fuse_name = target_image + '___fuse.png'
-        fuse_src = img_folder_path / fuse_name
+        fuse_src = configs.Paths.downloads / fuse_name
         new_fuse_name = person + '_' + fuse_name
-        fuse_dst = img_folder_path / new_fuse_name
-        renamed_images.append(new_fuse_name)
+        fuse_dst = configs.Paths.downloads / new_fuse_name
+        renamed_image_file_names.append(new_fuse_name)
         os.rename(fuse_src, fuse_dst)
 
         # change name of annotations json to avoid overwriting
         anno_name = target_image + '___pixel.json'
-        anno_src = img_folder_path / anno_name
+        anno_src = configs.Paths.downloads / anno_name
         new_anno_name = person + '_' + anno_name
-        anno_dst = img_folder_path / new_anno_name
+        anno_dst = configs.Paths.downloads / new_anno_name
         os.rename(anno_src, anno_dst)
 
-        # load in json annotation file
-        json_file = open(new_anno_name, )
-        annotations = json.load(json_file)
+        # load json annotation file
+        with anno_dst.open('r') as json_file:
+            annotations = json.load(json_file)
         tree_obj = objectpath.Tree(annotations)
 
         # make tuple of class names from json
@@ -64,7 +54,6 @@ def make_image_comparison_html(target_folders: List[str],
         class_tuples[person] = class_Name_tuple
         # class_tuples = {'andrew': ('wall', 'wall', ...), 'person2': ('wall', ...)}
 
-        json_file.close()
         # make list of all classes used (with repeats) (so it can be iterated over)
         for class_Name in class_Name_tuple:
             classes_used.append(class_Name)
@@ -85,7 +74,7 @@ def make_image_comparison_html(target_folders: List[str],
 
     # unique_classes = ['bag', 'big appliance', 'door', ...]
     # open class colors json
-    json_file2 = open('classes.json', )
+    json_file2 = (configs.Paths.downloads / 'classes.json').open('r')
     colors_json = json.load(json_file2)
     tree_obj2 = objectpath.Tree(colors_json)
 
@@ -122,68 +111,41 @@ def make_image_comparison_html(target_folders: List[str],
         data += "<tr>"
     data = "<table border=1>" + data + "<table>"
 
-    # write html page
-    with open("{0}_display.html".format(target_image), "w") as file:
-        # write original image with proper orientation/dimensions
-        if orientation == "vertical":
-            html_str1 = """
-            <html>
-            <head>
-            <style>
-            img {
-            width: 100%;
-            }
-            </style>
-            </head>
-            <body>
-            <img src= """ + str(target_image) + """ alt="HTML5 Icon" style="width:216px;height:288px;">
-            <div>
-                <br> 
-                <spacer type="vertical" width="10" height="1">  </spacer>
-                <br> 
-            </div>
-            """
-        else:
-            html_str1 = """
-            <html>
-            <head>
-            <style>
-            img {
-            width: 100%;
-            }
-            </style>
-            </head>
-            <body>
-            <img src= """ + str(target_image) + """ alt="HTML5 Icon" style="width:288px;height:216px;">
-            <div>
-                <br> 
-                <spacer type="vertical" width="10" height="1">  </spacer>
-                <br> 
-            </div>
-            """
-        res += html_str1
+    ####################################
+    # create html
+    ####################################
 
-        # write fuse images (with proper orientation)
-        for image in renamed_images:
-            if orientation == 'vertical':
-                html_str2 = """
-                <img src= {0} alt="HTML5 Icon" style="width:216px;height:288px;">
-                """.format(image)
-            else:
-                html_str2 = """
-                <img src= {0} alt="HTML5 Icon" style="width:288px;height:216px;">
-                """.format(image)
-            res += html_str2
+    res = ''  # html string
 
-        # write data table
-        html_str_last = """
-        <table border = '1'>
-        """ + str(data) + """
-        </table>
-        </body>
-        </html>
+    # write original image with proper orientation/dimensions
+    html_str1 = f"""
+        <html>
+        <head>
+        </head>
+        <body>
+        <img src= "/{configs.Paths.downloads / target_image}" style="width:288px;height:216px;">
+        <div>
+            <br> 
+            <spacer type="vertical" width="10" height="1">  </spacer>
+            <br> 
+        </div>
         """
+    res += html_str1
 
-        res += html_str_last
+    # write fuse images (with proper orientation)
+    for image in renamed_image_file_names:
+        html_str2 = f'<img src="/{configs.Paths.downloads / image}" style="width:288px;height:216px;">'
+        res += html_str2
 
-        return res
+    # write data table
+    html_str_last = f"""
+    <table border = '1'>
+    "{data}"
+    </table>
+    </body>
+    </html>
+    """
+
+    res += html_str_last
+
+    return res
