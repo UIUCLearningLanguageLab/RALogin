@@ -23,7 +23,7 @@ User=ph
 Group=www-data
 WorkingDirectory=/home/ph/RALogin
 Environment="PATH=/home/ph/RALogin/bin"
-ExecStart=/home/ph/RALogin/bin/gunicorn --workers 3 --bind unix:/home/ph/RALogin/ralogin.sock -m 007 wsgi:app
+ExecStart=/home/ph/RALogin/bin/gunicorn --timeout 60 --workers 3 --bind unix:/home/ph/RALogin/ralogin.sock -m 007 wsgi:app
 [Install]
 WantedBy=multi-user.target
 ```
