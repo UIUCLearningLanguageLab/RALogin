@@ -6,9 +6,9 @@ class Authentication:
 
 
 class Paths:
-    cwd = Path.cwd()
-    superannotate_config_path = cwd / 'superannotate_config.json'
-    downloads = Path('downloads')
+    root = Path(__file__).parent
+    superannotate_config_path = root / 'superannotate_config.json'
+    downloads = Path('static/downloads')
     assert downloads.exists()
 
 

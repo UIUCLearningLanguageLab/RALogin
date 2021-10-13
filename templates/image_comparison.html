@@ -1,0 +1,16 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+    <img src= "/static/downloads/{{ target_image }}" style="width:288px;height:216px;" alt="Target Image">
+
+    <br>
+    <br>
+
+    {{ fuse_images_html | safe  }}
+
+    {{ table_html | safe  }}
+
+
+
+{% endblock %}

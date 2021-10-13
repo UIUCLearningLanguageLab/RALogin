@@ -84,7 +84,7 @@ def image_comparison():
         raise AttributeError('No matching user.id')
 
     try:
-        html = make_image_comparison_html(target_folders, target_image)
+        html_elements = make_image_comparison_html(target_folders, target_image)
     except SABaseException as e:
         msg = ''
         msg += '<h2 style="color: red;">Failed to produce HTML due to error in superannotate:</h2>'
@@ -92,4 +92,4 @@ def image_comparison():
         msg += e.message
         return msg
     else:
-        return html
+        return render_template('image_comparison.html', target_image=target_image, **html_elements)

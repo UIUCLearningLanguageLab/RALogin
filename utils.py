@@ -2,21 +2,20 @@ import superannotate as sa
 import json
 import objectpath
 import os
-from typing import List
+from typing import List, Dict
 
 import configs
 
 
 def make_image_comparison_html(target_folders: List[str],
                                target_image: str,
-                               ) -> str:
+                               ) -> Dict[str, str]:
 
-    """generate html string"""
+    """download images and table_content, and return html strings for showing downloaded images and table_content"""
 
     sa.init(configs.Paths.superannotate_config_path)
 
-    # create empty list of renamed images and classes_used; create empty dict of class tuples
-    renamed_image_file_names = []
+    fuse_image_file_names = []
     classes_used = []
     class_tuples = {}
 
@@ -33,7 +32,7 @@ def make_image_comparison_html(target_folders: List[str],
         fuse_src = configs.Paths.downloads / fuse_name
         new_fuse_name = person + '_' + fuse_name
         fuse_dst = configs.Paths.downloads / new_fuse_name
-        renamed_image_file_names.append(new_fuse_name)
+        fuse_image_file_names.append(new_fuse_name)
         os.rename(fuse_src, fuse_dst)
 
         # change name of annotations json to avoid overwriting
@@ -69,7 +68,7 @@ def make_image_comparison_html(target_folders: List[str],
 
     # class_Name_dict = {'andrew': {'wall': 3, 'door': 1, 'furniture': 1, ...} ,
     #                   'layla': {'wall': 1, 'door': 0, 'furniture': 0, ...}}
-    # make list of unique class names (to avoid duplicate rows in data table)
+    # make list of unique class names (to avoid duplicate rows in table_content table)
     unique_classes = set(classes_used)
 
     # unique_classes = ['bag', 'big appliance', 'door', ...]
@@ -88,64 +87,42 @@ def make_image_comparison_html(target_folders: List[str],
     for i in range(len(class_Name_tuple2)):
         class_colors[class_Name_tuple2[i]] = class_Color_tuple[i]
 
+    ####################################
+    # create html for table
+    ####################################
+
     # class_colors = {'furniture': '#13dc23', 'big appliance': '#f675b3', ...}
-    # make data table
-    data = ""
+
+    table_content = ""
 
     # make columns
-    data += "<th>" + 'Object Class' + "</th>"
-    data += "<th>" + 'Color' + "</th>"
+    table_content += "<th>" + 'Object Class' + "</th>"
+    table_content += "<th>" + 'Color' + "</th>"
     for person in target_folders:
-        data += "<th>" + str(person) + "</th>"
+        table_content += "<th>" + str(person) + "</th>"
 
     # make rows
-    data += "<tr>"
-    row_tuple = class_Name_dict[str(target_folders[0])]
+    table_content += "<tr>"
     for class_used in unique_classes:
-        data += "<td>" + str(class_used) + "</td>"
+        table_content += "<td>" + str(class_used) + "</td>"
         if class_used in class_colors:
-            data += "<td bgcolor=" + str(class_colors[class_used]) + ">" + "</td>"
+            table_content += "<td bgcolor=" + str(class_colors[class_used]) + ">" + "</td>"
         for person in class_Name_dict:
             row_tuple2 = class_Name_dict[str(person)]
-            data += "<td>" + str(str(row_tuple2[str(class_used)])) + "</td>"
-        data += "<tr>"
-    data = "<table border=1>" + data + "<table>"
+            table_content += "<td>" + str(str(row_tuple2[str(class_used)])) + "</td>"
+        table_content += "<tr>"
+    table_content = "<table border=1>" + table_content + "<table>"
+
+    table_html = f"<table border = '1'>{table_content}</table>"
 
     ####################################
-    # create html
+    # create html for fuse_images
     ####################################
 
-    res = ''  # html string
-
-    # write original image with proper orientation/dimensions
-    html_str1 = f"""
-        <html>
-        <head>
-        </head>
-        <body>
-        <img src= "/{configs.Paths.downloads / target_image}" style="width:288px;height:216px;">
-        <div>
-            <br> 
-            <spacer type="vertical" width="10" height="1">  </spacer>
-            <br> 
-        </div>
-        """
-    res += html_str1
-
-    # write fuse images (with proper orientation)
-    for image in renamed_image_file_names:
+    fuse_images_html = ''
+    for image in fuse_image_file_names:
         html_str2 = f'<img src="/{configs.Paths.downloads / image}" style="width:288px;height:216px;">'
-        res += html_str2
+        fuse_images_html += html_str2
 
-    # write data table
-    html_str_last = f"""
-    <table border = '1'>
-    "{data}"
-    </table>
-    </body>
-    </html>
-    """
-
-    res += html_str_last
-
-    return res
+    return {'table_html': table_html,
+            'fuse_images_html': fuse_images_html}
