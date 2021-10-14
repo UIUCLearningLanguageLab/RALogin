@@ -24,7 +24,7 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/index')
 def index():
-    image_list = ['yg1_rr.jpg']  # todo dynamic
+    image_list = ['yg1_rr.jpg', 'test']  # todo dynamic
 
     return render_template('index.html', image_list=image_list)
 
