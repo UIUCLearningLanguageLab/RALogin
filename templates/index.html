@@ -2,20 +2,6 @@
 
 {% block content %}
     <h2>
-        {% if current_user.is_authenticated %}
-            Welcome back, {{ current_user.id }}.
-
-
-            <form action="{{ url_for('image_comparison') }}">
-                <label for="image_dropdown">Choose an image:</label>
-                    <select id="image_dropdown" name="image_dropdown">
-                        {% for image in image_list %}
-                            <option value="{{ image }}">{{ image }}</option>
-                        {% endfor %}
-                    </select>
-                <input type="submit" value="Submit">
-            </form>
-
-        {% endif %}
+        Welcome. Please login to access tools.
     </h2>
 {% endblock %}
