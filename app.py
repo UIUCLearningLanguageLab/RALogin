@@ -21,6 +21,28 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.get(user_id)
 
+
+def get_ra_list(user_id):
+    if user_id == 'ra':
+        ra_list = ['andrew', 'layla']
+    elif user_id == 'yushan':
+        ra_list = ['graceo',
+                   'miranda',
+                   'pavel', 
+                   'julie']
+    elif user_id == 'tom':
+        ra_list = ['michelle', 
+                   'janay',
+                   'arianna', 
+                   'talia']
+    elif user_id == 'danaizha':
+        ra_list = ['layla', 
+                   'karen',
+                   'andrews']
+    else:
+        raise AttributeError('No matching user.id')
+
+
 @login_required
 @app.route('/')
 @app.route('/menu')
@@ -32,25 +54,7 @@ def menu():
     else:
         user = User.get(user_id)
 
-    if user.id == 'ra':
-        ra_list = ['andrew', 'layla']
-    if user.id == 'yushang4@illinois.edu':
-        ra_list = ['gotoole2@illinois.edu',
-                   'mstill2@illinois.edu',
-                   'ppaun2@illinois.edu', 
-                   'julieyc3@illinois.edu']
-    if user.id == 'tkoropp2@illinois.edu':
-        ra_list = ['mtam6@illinois.edu', 
-                   'janayf2@illinois.edu',
-                   'acw4@illinois.edu', 
-                   'tyzhao2@illinois.edu']
-    if user.id == 'dharve5@illinois.edu':
-        ra_list = ['laylaic2@illinois.edu', 
-                   'mstill2@illinois.edu',
-                   'karenmn2@illinois.edu', 
-                   'asevers2@illinois.edu']
-    else:
-        raise AttributeError('No matching user.id')
+    ra_list = get_ra_list(user_id)
 
     #name of the project
     project = 'training_sets_headcam'
@@ -126,6 +130,7 @@ def image_comparison():
     else:
         user = User.get(user_id)
 
+    target_folders = get_ra_list(user_id)
     try:
         html_elements = make_image_comparison_html(target_folders, target_image)
     except SABaseException as e:
