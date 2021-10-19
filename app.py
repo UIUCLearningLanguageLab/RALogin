@@ -24,7 +24,48 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/index')
 def index():
-    image_list = ['yg1_rr.jpg', 'test']  # todo dynamic
+
+    try:
+        user_id = session['_user_id']
+    except KeyError:
+        return 'Did not find _user_id in session'
+    else:
+        user = User.get(user_id)
+
+    if user.id == 'ra':
+        ra_list = ['andrew', 'layla']
+    if user.id == 'yushang4@illinois.edu':
+        ra_list = ['gotoole2@illinois.edu',
+                   'mstill2@illinois.edu',
+                   'ppaun2@illinois.edu', 
+                   'julieyc3@illinois.edu']
+    if user.id == 'tkoropp2@illinois.edu':
+        ra_list = ['mtam6@illinois.edu', 
+                   'janayf2@illinois.edu',
+                   'acw4@illinois.edu', 
+                   'tyzhao2@illinois.edu']
+    if user.id == 'dharve5@illinois.edu':
+        ra_list = ['laylaic2@illinois.edu', 
+                   'mstill2@illinois.edu',
+                   'karenmn2@illinois.edu', 
+                   'asevers2@illinois.edu']
+    else:
+        raise AttributeError('No matching user.id')
+
+    #name of the project
+    project = 'training_sets_headcam'
+    image_list = []
+
+    #for ra in ra_list download metadata as list of dictionary (one dictionary per image)
+
+    for ra in ra_list:
+        image_dict_list = sa.search_images(project + '/' + ra, image_name_prefix=None, annotation_status=None, return_metadata=True)
+        #for image dictionary in list of dicitonary add image name to list
+        for diction in image_dict_list:
+            if diction['name'] not in image_list:
+                image_list.append(diction['name'])
+
+    # image_list = ['yg1_rr.jpg', 'test']  # todo dynamic
 
     return render_template('index.html', image_list=image_list)
 
@@ -77,11 +118,6 @@ def image_comparison():
         return 'Did not find _user_id in session'
     else:
         user = User.get(user_id)
-
-    if user.id == 'ra':
-        target_folders = ['andrew', 'layla']
-    else:
-        raise AttributeError('No matching user.id')
 
     try:
         html_elements = make_image_comparison_html(target_folders, target_image)
