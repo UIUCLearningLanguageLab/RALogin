@@ -2,7 +2,7 @@ from flask import Flask, session, request
 from flask import render_template, flash, redirect
 from forms import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user
-import time
+import superannotate as sa
 
 from superannotate.exceptions import SABaseException
 
@@ -69,11 +69,12 @@ def menu():
 
     return render_template('menu.html', image_list=image_list) 
 
+
 @app.route('/')
 @app.route('/index')
 def index():
 
-    return render_template('index.html', image_list=image_list)
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
