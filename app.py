@@ -2,6 +2,7 @@ from flask import Flask, session, request
 from flask import render_template, flash, redirect
 from forms import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user
+import time
 
 from superannotate.exceptions import SABaseException
 
@@ -20,12 +21,11 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.get(user_id)
 
-
+@login_required
 @app.route('/')
-@app.route('/index')
-def index():
-
-    try:
+@app.route('/menu')
+def menu():
+   try:
         user_id = session['_user_id']
     except KeyError:
         return 'Did not find _user_id in session'
@@ -67,6 +67,12 @@ def index():
 
     # image_list = ['yg1_rr.jpg', 'test']  # todo dynamic
 
+    return render_template('menu.html', image_list=image_list) 
+
+@app.route('/')
+@app.route('/index')
+def index():
+
     return render_template('index.html', image_list=image_list)
 
 
@@ -85,7 +91,7 @@ def login():
                 user = User(id=form.user_name.data)
                 login_user(user)
                 flash('Login successful.')
-                return redirect('index')
+                return redirect('menu')
             else:
                 flash('Incorrect password.')
                 return redirect('index')
