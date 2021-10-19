@@ -25,7 +25,7 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/menu')
 def menu():
-   try:
+    try:
         user_id = session['_user_id']
     except KeyError:
         return 'Did not find _user_id in session'
