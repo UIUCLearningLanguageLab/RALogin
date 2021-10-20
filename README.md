@@ -1,10 +1,11 @@
 # RALogin
-Python web server that enables RAs to perform simple tasks on lab server
+
+A Python-based web server that enables RAs to perform simple tasks on the lab's file server.
 
 
 ## Setup
 
-The Flask app is located on the UIUC lab file server in `/home/ph/ralogin`. 
+The Flask app is located on the UIUC lab's file server at `/home/ph/RALogin`. 
 
 The app is exposed by Gunicorn, which was setup with:
 ```bash
@@ -31,9 +32,9 @@ WantedBy=multi-user.target
 This means we can control the service with:
 
 ```bash
-sudo systemctl start flaskapp
-sudo systemctl enable flaskapp
-sudo systemctl status flaskapp
+sudo systemctl start ralogin
+sudo systemctl enable ralogin
+sudo systemctl status ralogin
 ```
 
 NGinx was setup to pass web requests on port 5001 to the socket provided by the service.
@@ -68,4 +69,10 @@ cd /home/ph/RALogin
 git pull
 sudo systemctl restart ralogin
 sudo systemctl restart nginx
+```
+
+To check error messages:
+
+```bash
+sudo systemctl status ralogin
 ```
