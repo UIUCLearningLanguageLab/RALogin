@@ -28,7 +28,7 @@ def make_image_comparison_html(target_folders: List[str],
     for person in target_folders:
 
         # download original image, annotations json, overlay image and fuse image
-        sa.download_image(configs.ImageComparison.project + '/',
+        sa.download_image(configs.ImageComparison.project + '/' + person,
                           target_image,
                           configs.Paths.downloads,
                           include_annotations=True,
