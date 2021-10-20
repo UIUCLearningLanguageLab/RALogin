@@ -23,8 +23,14 @@ def make_image_comparison_html(target_folders: List[str],
     for person in target_folders:
 
         # download original image, annotations json, overlay image and fuse image
-        sa.download_image('new_annotator_practice/' + person, target_image, configs.Paths.downloads, True, True, True)
-        sa.download_annotation_classes_json('new_annotator_practice', configs.Paths.downloads)
+        sa.download_image(configs.ImageComparison.project + '/',
+                          target_image,
+                          configs.Paths.downloads,
+                          include_annotations=True,
+                          include_fuse=True,
+                          include_overlay=True)
+        sa.download_annotation_classes_json(configs.ImageComparison.project,
+                                            configs.Paths.downloads)
 
         # change name of fuse image to avoid overwriting image during second loop
         # (since otherwise they would have same name)

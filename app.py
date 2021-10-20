@@ -26,20 +26,24 @@ def get_ra_list(user: User):
     if user.id == 'ra':
         return ['andrew',
                 'layla']
-    elif user.id == 'yushan':
-        return ['graceo',
-                'miranda',
-                'pavel',
-                'julie']
-    elif user.id == 'tom':
-        return ['michelle',
-                'janay',
-                'arianna',
-                'talia']
-    elif user.id == 'danaizha':
-        return ['layla',
-                'karen',
-                'andrews']
+
+    elif user.id == 'yushang4@illinois.edu':
+        return ['gotoole2@illinois.edu',
+                'mstill2@illinois.edu',
+                'ppaun2@illinois.edu',
+                'julieyc3@illinois.edu']
+
+    elif user.id == 'tkoropp2@illinois.edu':
+        return ['mtam6@illinois.edu',
+                'janayf2@illinois.edu',
+                'acw4@illinois.edu',
+                'tyzhao2@illinois.edu']
+
+    elif user.id == 'dharve5@illinois.edu':
+        return ['laylaic2@illinois.edu',
+                'mstill2@illinois.edu',
+                'karenmn2@illinois.edu',
+                'asevers2@illinois.edu']
     else:
         raise AttributeError('No matching user.id')
 
@@ -58,39 +62,21 @@ def menu():
     else:
         user = User.get(user_id)
 
-    ra_list = get_ra_list(user)
-
-    # name of the project
-    project = 'training_sets_headcam'
-    image_list = []
-
     # necessary before using any superannotate functionality
     sa.init(configs.Paths.superannotate_config_path)
 
-    # for ra in ra_list download metadata as list of dictionary (one dictionary per image)
-    for ra in ra_list:
+    try:
+        image_names = sa.search_images_all_folders(configs.ImageComparison.project)
+    except SABaseException as e:
+        msg = ''
+        msg += '<h2 style="color: red;">Failed to produce HTML due to error in superannotate:</h2>'
+        msg += '<br>'
+        msg += e.message
+        return msg
+    else:
+        image_names = set(image_names)
 
-        print(f'Searching images for ra={ra}')
-
-        project = project + '/' + ra  # todo is this right?
-        image_name_prefix = ''
-        annotation_status = ''
-        assert image_name_prefix and annotation_status
-        try:
-            image_dict_list = sa.search_images(project, image_name_prefix, annotation_status, return_metadata=True)
-        except SABaseException as e:
-            msg = ''
-            msg += '<h2 style="color: red;">Failed to produce HTML due to error in superannotate:</h2>'
-            msg += '<br>'
-            msg += e.message
-            return msg
-
-        # for image dictionary in list of dictionary add image name to list
-        for diction in image_dict_list:
-            if diction['name'] not in image_list:
-                image_list.append(diction['name'])
-
-    return render_template('menu.html', image_list=image_list)
+    return render_template('menu.html', image_names=image_names)
 
 
 @app.route('/')
@@ -149,7 +135,23 @@ def image_comparison():
     else:
         user = User.get(user_id)
 
-    target_folders = get_ra_list(user_id)
+    ra_list = get_ra_list(user)
+
+    big_folder_data = sa.search_folders(configs.ImageComparison.project,
+                                        return_metadata=True)
+
+    # make target_folders
+    target_folders = []
+    for folder_data in big_folder_data:
+        folder_name = folder_data['name']
+        img_meta_list = sa.search_images(configs.ImageComparison.project + '/' + folder_name,
+                                         image_name_prefix=target_image,
+                                         return_metadata=True)
+        for image_dict in img_meta_list:
+            annotator_email = image_dict['annotator_id']
+            if annotator_email in ra_list:
+                target_folders.append(folder_name)
+
     try:
         html_elements = make_image_comparison_html(target_folders, target_image)
     except SABaseException as e:

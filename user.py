@@ -7,7 +7,7 @@ class User(UserMixin):
 
     @classmethod
     def get(cls, user_id: str):
-        if user_id == 'ra':
-            return cls(id='ra')
 
-        return None
+        # this can be made more flexible. as of now, a user name is the user's id.
+        return cls(id=user_id)
+
