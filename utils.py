@@ -38,9 +38,13 @@ def make_image_comparison_html(target_folders: List[str],
         sa.download_annotation_classes_json(configs.ImageComparison.project,
                                             configs.Paths.downloads)
 
+        # a fused image may not be downloaded if it is not yet available
+        fuse_name = target_image + '___fuse.png'
+        if not (configs.Paths.downloads / fuse_name).exists():
+            raise FileNotFoundError(f'Did not find fused image for {target_image}')
+
         # change name of fuse image to avoid overwriting image during second loop
         # (since otherwise they would have same name)
-        fuse_name = target_image + '___fuse.png'
         new_fuse_name = person + '_' + fuse_name
         fuse_image_file_names.append(new_fuse_name)
         (configs.Paths.downloads / fuse_name).rename(configs.Paths.downloads / new_fuse_name)
