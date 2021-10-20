@@ -22,10 +22,11 @@ def load_user(user_id):
     return User.get(user_id)
 
 
-def get_ra_list(user: User):
-    if user.id == 'ra':
-        return ['andrew',
-                'layla']
+def get_annotator_emails(user: User):
+
+    # TODO remove - only for debugging
+    if user.id == 'ph':
+        return ['asevers2@illinois.edu']
 
     elif user.id == 'yushang4@illinois.edu':
         return ['gotoole2@illinois.edu',
@@ -55,12 +56,6 @@ def menu():
     this is the page that is returned after a user is logged in.
     here they can perform whatever functions are available (i.e. pick images to compare rom dropdown).
     """
-    try:
-        user_id = session['_user_id']
-    except KeyError:
-        return 'Did not find _user_id in session'
-    else:
-        user = User.get(user_id)
 
     # necessary before using any superannotate functionality
     sa.init(configs.Paths.superannotate_config_path)
@@ -74,7 +69,7 @@ def menu():
         msg += e.message
         return msg
     else:
-        image_names = set(image_names)
+        image_names = sorted(set(image_names))
 
     return render_template('menu.html', image_names=image_names)
 
@@ -135,7 +130,7 @@ def image_comparison():
     else:
         user = User.get(user_id)
 
-    ra_list = get_ra_list(user)
+    annotators = get_annotator_emails(user)
 
     big_folder_data = sa.search_folders(configs.ImageComparison.project,
                                         return_metadata=True)
@@ -149,7 +144,8 @@ def image_comparison():
                                          return_metadata=True)
         for image_dict in img_meta_list:
             annotator_email = image_dict['annotator_id']
-            if annotator_email in ra_list:
+            print(annotator_email)
+            if annotator_email in annotators:
                 target_folders.append(folder_name)
 
     try:
@@ -159,6 +155,17 @@ def image_comparison():
         msg += '<h2 style="color: red;">Failed to produce HTML due to error in superannotate:</h2>'
         msg += '<br>'
         msg += e.message
+        msg += f'<br>Using target_folders={target_folders} and target_image={target_image}'
         return msg
+    except FileNotFoundError as e:
+        msg = ''
+        msg += '<h2 style="color: red;">Failed to produce HTML because a file was not downloaded by superannotate:</h2>'
+        msg += '<br>'
+        msg += e.filename
+        msg += f'<br>Using target_folders={target_folders} and target_image={target_image}'
+        return msg
+
     else:
-        return render_template('image_comparison.html', target_image=target_image, **html_elements)
+        return render_template('image_comparison.html',
+                               target_image=target_image,
+                               **html_elements)

@@ -13,6 +13,11 @@ def make_image_comparison_html(target_folders: List[str],
 
     """download images and table_content, and return html strings for showing downloaded images and table_content"""
 
+    # remove previously downloaded data
+    for path in configs.Paths.downloads.glob('*'):
+        print(f'Removing {path}')
+        path.unlink()
+
     sa.init(configs.Paths.superannotate_config_path)
 
     fuse_image_file_names = []
@@ -77,9 +82,9 @@ def make_image_comparison_html(target_folders: List[str],
     # make list of unique class names (to avoid duplicate rows in table_content table)
     unique_classes = set(classes_used)
 
-    # unique_classes = ['bag', 'big appliance', 'door', ...]
     # open class colors json
-    json_file2 = (configs.Paths.downloads / 'classes.json').open('r')
+    classes_path = (configs.Paths.downloads / 'classes.json')
+    json_file2 = classes_path.open('r')
     colors_json = json.load(json_file2)
     tree_obj2 = objectpath.Tree(colors_json)
 

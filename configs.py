@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 class Authentication:
-    user2pw = {'ra': 'ra',
+    user2pw = {'ph': 'ph',
                'yushang4@illinois.edu': '003imageSemantics',
                'tkoropp2@illinois.edu': '002imageSemantics',
                'dharve5@illinois.edu': '001imageSemantics'}
