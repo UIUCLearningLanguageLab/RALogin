@@ -26,7 +26,7 @@ def get_annotator_emails(user: User):
 
     # TODO remove - only for debugging
     if user.id == 'ph':
-        return ['asevers2@illinois.edu']
+        return ['karenmn2@illinois.edu']
 
     elif user.id == 'yushang4@illinois.edu':
         return ['gotoole2@illinois.edu',
@@ -58,7 +58,7 @@ def menu():
     """
 
     # necessary before using any superannotate functionality
-    sa.init(configs.Paths.superannotate_config_path)
+    sa.init(str(configs.Paths.superannotate_config_path))
 
     try:
         image_names = sa.search_images_all_folders(configs.ImageComparison.project)

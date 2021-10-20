@@ -9,6 +9,7 @@ import configs
 
 def make_image_comparison_html(target_folders: List[str],
                                target_image: str,
+                               include_overlay: bool = False,
                                ) -> Dict[str, str]:
 
     """download images and table_content, and return html strings for showing downloaded images and table_content"""
@@ -18,7 +19,7 @@ def make_image_comparison_html(target_folders: List[str],
         print(f'Removing {path}')
         path.unlink()
 
-    sa.init(configs.Paths.superannotate_config_path)
+    sa.init(str(configs.Paths.superannotate_config_path))
 
     fuse_image_file_names = []
     classes_used = []
@@ -33,18 +34,16 @@ def make_image_comparison_html(target_folders: List[str],
                           configs.Paths.downloads,
                           include_annotations=True,
                           include_fuse=True,
-                          include_overlay=True)
+                          include_overlay=include_overlay)
         sa.download_annotation_classes_json(configs.ImageComparison.project,
                                             configs.Paths.downloads)
 
         # change name of fuse image to avoid overwriting image during second loop
         # (since otherwise they would have same name)
         fuse_name = target_image + '___fuse.png'
-        fuse_src = configs.Paths.downloads / fuse_name
         new_fuse_name = person + '_' + fuse_name
-        fuse_dst = configs.Paths.downloads / new_fuse_name
         fuse_image_file_names.append(new_fuse_name)
-        os.rename(fuse_src, fuse_dst)
+        (configs.Paths.downloads / fuse_name).rename(configs.Paths.downloads / new_fuse_name)
 
         # change name of annotations json to avoid overwriting
         anno_name = target_image + '___pixel.json'
