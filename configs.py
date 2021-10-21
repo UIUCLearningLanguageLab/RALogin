@@ -12,6 +12,7 @@ class Paths:
     root = Path(__file__).parent
     superannotate_config_path = root / 'superannotate_config.json'
     downloads = Path('static/downloads')
+    static = Path('static')
     assert downloads.exists()
 
 

@@ -90,7 +90,7 @@ def make_image_comparison_html(target_folders: List[str],
                    for class_name, color_code in zip(tree_obj2.execute('$..name'), tree_obj2.execute('$..color'))}
 
     ####################################
-    # create html for table
+    # create html for classes
     ####################################
 
     # class_colors = {'furniture': '#13dc23', 'big appliance': '#f675b3', ...}
@@ -104,29 +104,40 @@ def make_image_comparison_html(target_folders: List[str],
         table_content += "<th>" + str(person) + "</th>"
 
     # make rows
-    table_content += "<tr>"
     for class_used in unique_classes:
+        table_content += "<tr>"
         table_content += "<td>" + str(class_used) + "</td>"
         if class_used in class2color:
             table_content += "<td bgcolor=" + str(class2color[class_used]) + ">" + "</td>"
         for person in person2class_name2class_count:
             row_tuple2 = person2class_name2class_count[str(person)]
             table_content += "<td>" + str(str(row_tuple2[str(class_used)])) + "</td>"
-        table_content += "<tr>"
-    table_content = "<table border=1>" + table_content + "<table>"
 
-    table_html = f"<table border = '1'>{table_content}</table>"
+    classes_html = f"<table border=1>{table_content}</table>"
 
     ####################################
     # create html for fuse_images
     ####################################
 
-    fuse_images_html = ''
-    for image in fuse_image_file_names:
-        html_str2 = f'<img src="/{configs.Paths.downloads / image}" style="width:288px;height:216px;">'
-        fuse_images_html += html_str2
+    table_content = ""
 
-    return {'table_html': table_html,
+    # make columns
+    for person in target_folders:
+        table_content += "<th>" + str(person) + "</th>"
+
+    table_content += "<tr>"
+
+    for image_name in fuse_image_file_names:
+        if not(configs.Paths.downloads / image_name).exists():
+            image_path = configs.Paths.static / 'missing.png'
+        else:
+            image_path = configs.Paths.downloads / image_name
+        img_html = f'<img src="/{image_path}" style="width:288px;height:216px;">'
+        table_content += "<td>" + img_html + "</td>"
+
+    fuse_images_html = f"<table border=1>{table_content}</table>"
+
+    return {'classes_html': classes_html,
             'fuse_images_html': fuse_images_html}
 
 
@@ -164,12 +175,10 @@ def get_annotator_emails(user: User):
 
     # TODO remove - only for debugging
     if user.id == 'ph':
-        return ['gotoole2@illinois.edu',
-                'mstill2@illinois.edu',
-                'ppaun2@illinois.edu',
-                'julieyc3@illinois.edu',
-                'karenmn2@illinois.edu',
-                ]
+        return ['mtam6@illinois.edu',
+                'janayf2@illinois.edu',
+                'acw4@illinois.edu',
+                'tyzhao2@illinois.edu']
 
     elif user.id == 'yushang4@illinois.edu':
         return ['gotoole2@illinois.edu',
