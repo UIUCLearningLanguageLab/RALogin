@@ -22,7 +22,7 @@ def make_image_comparison_html(target_folders: List[str],
 
     # check annotation status and skip person if annotation is not started
     persons = []
-    for person in persons:
+    for person in target_folders:
         img_meta_dict = sa.get_image_metadata(configs.ImageComparison.project + '/' + person, target_image)
         if img_meta_dict['annotation_status'] != 'NotStarted':
             persons.append(person)
@@ -100,7 +100,7 @@ def make_image_comparison_html(target_folders: List[str],
     # make columns
     table_content += "<th>" + 'Object Class' + "</th>"
     table_content += "<th>" + 'Color' + "</th>"
-    for person in target_folders:
+    for person in persons:
         table_content += "<th>" + str(person) + "</th>"
 
     # make rows
@@ -122,7 +122,7 @@ def make_image_comparison_html(target_folders: List[str],
     table_content = ""
 
     # make columns
-    for person in target_folders:
+    for person in persons:
         table_content += "<th>" + str(person) + "</th>"
 
     table_content += "<tr>"
