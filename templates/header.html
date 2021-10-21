@@ -6,19 +6,23 @@
           border: 1px solid black;
           border-collapse: collapse;
         }
+        body {
+            margin-left: 200px;
+            margin-right: 200px;
+        }
     </style>
 </head>
 <body>
-
-    <img src="/static/uiuc_lab_logo.png" width="100%"/>
-
-    <h1>RA Access to UIUC Language & Learning Lab File Server</h1>
+    <img src="/static/uiuc_lab_logo.png" style="height:180px;display: block;margin-left: auto;margin-right: auto;"/>
+    <h1 style="text-align: center;">RA Access to UIUC Language & Learning Lab File Server</h1>
 
     {% if current_user.is_authenticated %}
         <a href="/logout">Logout</a>
     {% else %}
         <a href="/login">Login</a>
     {% endif %}
+
+    <a href="/menu">Menu</a>
 
     <hr>
 
