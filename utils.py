@@ -22,7 +22,7 @@ def make_image_comparison_html(target_folders: List[str],
 
     # check annotation status and skip person if annotation is not started
     persons = []
-    for person in target_folders:
+    for person in persons:
         img_meta_dict = sa.get_image_metadata(configs.ImageComparison.project + '/' + person, target_image)
         if img_meta_dict['annotation_status'] != 'NotStarted':
             persons.append(person)
