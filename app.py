@@ -30,6 +30,11 @@ def menu():
     here they can perform whatever functions are available (i.e. pick images to compare rom dropdown).
     """
 
+    # remove previously downloaded data
+    for path in configs.Paths.downloads.glob('*'):
+        print(f'Removing {path}')
+        path.unlink()
+
     # necessary before using any superannotate functionality
     sa.init(str(configs.Paths.superannotate_config_path))
 

@@ -14,19 +14,21 @@ def make_image_comparison_html(target_folders: List[str],
 
     """download images and table_content, and return html strings for showing downloaded images and table_content"""
 
-    # remove previously downloaded data
-    for path in configs.Paths.downloads.glob('*'):
-        print(f'Removing {path}')
-        path.unlink()
-
     sa.init(str(configs.Paths.superannotate_config_path))
 
     fuse_image_file_names = []
     classes_used = []
     person2class_names = {}
 
-    # loop through specified people/folders
+    # check annotation status and skip person if annotation is not started
+    persons = []
     for person in target_folders:
+        img_meta_dict = sa.get_image_metadata(configs.ImageComparison.project + '/' + person, target_image)
+        if img_meta_dict['annotation_status'] != 'NotStarted':
+            persons.append(person)
+
+    # loop through specified people/folders
+    for person in persons:
 
         # download original image, annotations json, overlay image and fuse image
         sa.download_image(configs.ImageComparison.project + '/' + person,
@@ -69,7 +71,7 @@ def make_image_comparison_html(target_folders: List[str],
 
     # count class name by person and class
     person2class_name2class_count = {}
-    for person in target_folders:
+    for person in persons:
         person2class_name2class_count[person] = {}
         for class_name in classes_used:
             if class_name not in person2class_name2class_count[person]:
