@@ -2,7 +2,9 @@
 
 {% block content %}
 
-    <img src= "/static/downloads/{{ target_image }}" style="width:288px;height:216px;" alt="Target Image">
+    {% if is_target_image_downloaded %}
+        <img src= "/static/downloads/{{ target_image }}" style="width:288px;height:216px;" alt="Target Image">
+    {% endif %}
 
     <br>
     <br>

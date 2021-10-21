@@ -8,7 +8,7 @@ from superannotate.exceptions import SABaseException
 
 import configs
 from user import User
-from utils import make_image_comparison_html
+from utils import make_image_comparison_html, find_target_folders
 
 app = Flask(__name__)
 app.config.from_object(configs.FlaskApp)
@@ -20,33 +20,6 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
-
-
-def get_annotator_emails(user: User):
-
-    # TODO remove - only for debugging
-    if user.id == 'ph':
-        return ['karenmn2@illinois.edu']
-
-    elif user.id == 'yushang4@illinois.edu':
-        return ['gotoole2@illinois.edu',
-                'mstill2@illinois.edu',
-                'ppaun2@illinois.edu',
-                'julieyc3@illinois.edu']
-
-    elif user.id == 'tkoropp2@illinois.edu':
-        return ['mtam6@illinois.edu',
-                'janayf2@illinois.edu',
-                'acw4@illinois.edu',
-                'tyzhao2@illinois.edu']
-
-    elif user.id == 'dharve5@illinois.edu':
-        return ['laylaic2@illinois.edu',
-                'mstill2@illinois.edu',
-                'karenmn2@illinois.edu',
-                'asevers2@illinois.edu']
-    else:
-        raise AttributeError('No matching user.id')
 
 
 @login_required
@@ -130,23 +103,7 @@ def image_comparison():
     else:
         user = User.get(user_id)
 
-    annotators = get_annotator_emails(user)
-
-    big_folder_data = sa.search_folders(configs.ImageComparison.project,
-                                        return_metadata=True)
-
-    # make target_folders
-    target_folders = []
-    for folder_data in big_folder_data:
-        folder_name = folder_data['name']
-        img_meta_list = sa.search_images(configs.ImageComparison.project + '/' + folder_name,
-                                         image_name_prefix=target_image,
-                                         return_metadata=True)
-        for image_dict in img_meta_list:
-            annotator_email = image_dict['annotator_id']
-            print(annotator_email)
-            if annotator_email in annotators:
-                target_folders.append(folder_name)
+    target_folders = find_target_folders(target_image, user)
 
     try:
         html_elements = make_image_comparison_html(target_folders, target_image)
@@ -165,7 +122,12 @@ def image_comparison():
         msg += f'<br>Using target_folders={target_folders} and target_image={target_image}'
         return msg
 
-    else:
-        return render_template('image_comparison.html',
-                               target_image=target_image,
-                               **html_elements)
+    if not html_elements:
+        flash(f'Did not find annotation data for {target_image}')
+
+    return render_template('image_comparison.html',
+                           target_image=target_image,
+                           is_target_image_downloaded=True if html_elements else False,
+                           **html_elements)
+
+
