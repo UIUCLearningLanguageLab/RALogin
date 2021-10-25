@@ -180,7 +180,6 @@ def get_annotator_emails(user: User):
 
     group1 = ['dharve5@illinois.edu',
                 'laylaic2@illinois.edu',
-                'mstill2@illinois.edu',
                 'karenmn2@illinois.edu',
                 'asevers2@illinois.edu']
 
@@ -211,7 +210,6 @@ def get_annotator_emails(user: User):
 
     elif user.id in group1:
         return ['laylaic2@illinois.edu',
-                'mstill2@illinois.edu',
                 'karenmn2@illinois.edu',
                 'asevers2@illinois.edu']
     else:
