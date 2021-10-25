@@ -31,3 +31,5 @@ class Paths:
 class FlaskApp(object):
     SECRET_KEY = '39hsagshgggb'
 
+class ImageComparison:
+    project = 'training_sets_headcam'
