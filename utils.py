@@ -172,6 +172,23 @@ def find_target_folders(target_image, user):
 
 
 def get_annotator_emails(user: User):
+    group3 = ['yushang4@illinois.edu',
+                'gotoole2@illinois.edu',
+                'mstill2@illinois.edu',
+                'ppaun2@illinois.edu',
+                'julieyc3@illinois.edu']
+
+    group1 = ['dharve5@illinois.edu',
+                'laylaic2@illinois.edu',
+                'mstill2@illinois.edu',
+                'karenmn2@illinois.edu',
+                'asevers2@illinois.edu']
+
+    group2 = ['tkoropp2@illinois.edu',
+                'mtam6@illinois.edu',
+                'janayf2@illinois.edu',
+                'acw4@illinois.edu',
+                'tyzhao2@illinois.edu']
 
     # TODO remove - only for debugging
     if user.id == 'ph':
@@ -180,19 +197,19 @@ def get_annotator_emails(user: User):
                 'acw4@illinois.edu',
                 'tyzhao2@illinois.edu']
 
-    elif user.id == 'yushang4@illinois.edu':
+    elif user.id in group3:
         return ['gotoole2@illinois.edu',
                 'mstill2@illinois.edu',
                 'ppaun2@illinois.edu',
                 'julieyc3@illinois.edu']
 
-    elif user.id == 'tkoropp2@illinois.edu':
+    elif user.id in group2:
         return ['mtam6@illinois.edu',
                 'janayf2@illinois.edu',
                 'acw4@illinois.edu',
                 'tyzhao2@illinois.edu']
 
-    elif user.id == 'dharve5@illinois.edu':
+    elif user.id in group1:
         return ['laylaic2@illinois.edu',
                 'mstill2@illinois.edu',
                 'karenmn2@illinois.edu',
