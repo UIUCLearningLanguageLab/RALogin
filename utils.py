@@ -189,6 +189,13 @@ def get_annotator_emails(user: User):
                 'acw4@illinois.edu',
                 'tyzhao2@illinois.edu']
 
+    group4 = ['tkoropp2@illinois.edu',
+                'mrlott2@illinois.edu',
+                'cew4@illinois.edu',
+                'ijadon2@illinois.edu',
+                'acball2@illinois.edu',
+                'ruoget2@illinois.edu']
+
     # TODO remove - only for debugging
     if user.id == 'ph':
         return ['mtam6@illinois.edu',
@@ -201,6 +208,13 @@ def get_annotator_emails(user: User):
                 'mstill2@illinois.edu',
                 'ppaun2@illinois.edu',
                 'julieyc3@illinois.edu']
+
+    elif user.id in group4:
+        return ['mrlott2@illinois.edu',
+                'cew4@illinois.edu',
+                'ijadon2@illinois.edu',
+                'acball2@illinois.edu',
+                'ruoget2@illinois.edu']
 
     elif user.id in group2:
         return ['mtam6@illinois.edu',

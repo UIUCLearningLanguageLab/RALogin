@@ -19,7 +19,13 @@ class Authentication:
                 'mstill2@illinois.edu': 'iS38481888',
                 'julieyc3@illinois.edu': 'iS38481347',
                 'ppaun2@illinois.edu': 'iS38481282',
-                'gotoole2@illinois.edu': 'iS38481100'}
+                'gotoole2@illinois.edu': 'iS38481100',
+
+                'mrlott2@illinois.edu': 'iS38482000',
+                'cew4@illinois.edu': 'iS38482000',
+                'ijadon2@illinois.edu': 'iS38482000',
+                'acball2@illinois.edu': 'iS38482000',
+                'ruoget2@illinois.edu': 'iS38482000'}
 
 class Paths:
     root = Path(__file__).parent
