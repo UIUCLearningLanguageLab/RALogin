@@ -77,7 +77,18 @@ To check error messages:
 sudo systemctl status ralogin
 ```
 
-## Passwords
+## Advanced 
+
+### Passwords
 
 Passwords are stored on the server in `home/ph/RALogin/.env`. 
-Adding or removing credentials requires access to the server. 
+Adding or removing credentials requires access to the server.
+
+### Python packages
+
+Installing new or updating existing packages requires access to the server. 
+Navigate to  `home/ph/RALogin`, and then activate the virtual Python environment like so:
+
+```
+source bin/activate
+```
