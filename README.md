@@ -76,3 +76,8 @@ To check error messages:
 ```bash
 sudo systemctl status ralogin
 ```
+
+## Passwords
+
+Passwords are stored on the server in `home/ph/RALogin/.env`. 
+Adding or removing credentials requires access to the server. 
