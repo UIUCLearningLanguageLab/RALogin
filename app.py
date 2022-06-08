@@ -3,6 +3,7 @@ from flask import render_template, flash, redirect
 from forms import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user
 import superannotate as sa
+from dotenv import dotenv_values
 
 from superannotate.exceptions import SABaseException
 
@@ -63,9 +64,9 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-
         try:
-            correct_pw = configs.Authentication.user2pw[form.user_name.data]  # TODO get pw from environment variable
+            env = dotenv_values('.env')
+            correct_pw = env[form.user_name.data]
         except KeyError:
             flash('Did not recognize user name.')
             return redirect('index')

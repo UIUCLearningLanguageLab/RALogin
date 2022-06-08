@@ -2,30 +2,32 @@ from pathlib import Path
 
 
 class Authentication:
-    user2pw = {'ra': 'ra',
-               'yushang4@illinois.edu': '003imageSemantics',
-               'tkoropp2@illinois.edu': '002imageSemantics',
-               'dharve5@illinois.edu': '001imageSemantics',
+    user2pw = {
+        'ra': 'ra',
 
-                'laylaic2@illinois.edu': 'iS38481235',
-                'karenmn2@illinois.edu': 'iS38481545',
-                'asevers2@illinois.edu': 'iS38481532',
+        'yushang4@illinois.edu': '003imageSemantics',
+        'tkoropp2@illinois.edu': '002imageSemantics',
+        'dharve5@illinois.edu': '001imageSemantics',
 
-                'janayf2@illinois.edu': 'iS38481531',
-                'acw4@illinois.edu': 'iS38481599',
-                'mtam6@illinois.edu': 'iS38481563',
-                'tyzhao2@illinois.edu': 'iS38481999',
+        'laylaic2@illinois.edu': 'iS38481235',
+        'karenmn2@illinois.edu': 'iS38481545',
+        'asevers2@illinois.edu': 'iS38481532',
 
-                'mstill2@illinois.edu': 'iS38481888',
-                'julieyc3@illinois.edu': 'iS38481347',
-                'ppaun2@illinois.edu': 'iS38481282',
-                'gotoole2@illinois.edu': 'iS38481100',
+        'janayf2@illinois.edu': 'iS38481531',
+        'acw4@illinois.edu': 'iS38481599',
+        'mtam6@illinois.edu': 'iS38481563',
+        'tyzhao2@illinois.edu': 'iS38481999',
 
-                'mrlott2@illinois.edu': 'iS38482000',
-                'cew4@illinois.edu': 'iS38482000',
-                'ijadon2@illinois.edu': 'iS38482000',
-                'acball2@illinois.edu': 'iS38482000',
-                'ruoget2@illinois.edu': 'iS38482000'}
+        'mstill2@illinois.edu': 'iS38481888',
+        'julieyc3@illinois.edu': 'iS38481347',
+        'ppaun2@illinois.edu': 'iS38481282',
+        'gotoole2@illinois.edu': 'iS38481100',
+
+        'mrlott2@illinois.edu': 'iS38482000',
+        'cew4@illinois.edu': 'iS38482000',
+        'ijadon2@illinois.edu': 'iS38482000',
+        'acball2@illinois.edu': 'iS38482000',
+        'ruoget2@illinois.edu': 'iS38482000'}
 
 class Paths:
     root = Path(__file__).parent
