@@ -13,4 +13,4 @@ class FlaskApp(object):
 
 
 class ImageComparison:
-    project = 'training_sets_headcam'
+    project = '2022-4fall_training_sets'
