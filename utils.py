@@ -204,7 +204,9 @@ def get_annotator_emails(user: User):
                 'cew4@illinois.edu', 
                 'mrlott2@illinois.edu', 
                 'ijadon2@illinois.edu', 
-                'acball2@illinois.edu']
+                'acball2@illinois.edu',
+                'jwillits@illinois.edu',
+                'kmkoch3@illinois.edu']
 
 
     if user.id in group3:
@@ -233,7 +235,8 @@ def get_annotator_emails(user: User):
     
     elif user.id in fall2022:
         return ['qingdan2@illinois.edu', 'mh42@illinois.edu', 'asi4@illinois.edu', 'heevam2@illinois.edu', 
-                'julieyc3@illinois.edu', 'cew4@illinois.edu', 'mrlott2@illinois.edu', 'ijadon2@illinois.edu', 'acball2@illinois.edu']
+                'julieyc3@illinois.edu', 'cew4@illinois.edu', 'mrlott2@illinois.edu', 'ijadon2@illinois.edu', 'acball2@illinois.edu',
+                'jwillits@illinois.edu', 'kmkoch3@illinois.edu']
 
     else:
         raise AttributeError('No matching user.id')
